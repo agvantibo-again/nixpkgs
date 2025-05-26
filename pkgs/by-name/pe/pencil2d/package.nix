@@ -3,6 +3,8 @@
   stdenv,
   fetchFromGitHub,
   qt5,
+  git,
+  ffmpeg_6,
 }:
 
 stdenv.mkDerivation (FinalAttrs: {
@@ -14,12 +16,19 @@ stdenv.mkDerivation (FinalAttrs: {
     repo = "pencil";
     tag = "v${FinalAttrs.version}";
     hash = "sha256-OuZpKgX2BgfuQdnjk/RTBww/blO1CIrYWr7KytqcIbQ=";
+    leaveDotGit = true;
   };
 
   nativeBuildInputs = with qt5; [
     qmake
     wrapQtAppsHook
     qttools
+    git
+  ];
+
+  qmakeFlags = [
+    "pencil2d.pro"
+    "CONFIG+=release CONFIG+=PENCIL2D_NIGHTLY CONFIG+=GIT"
   ];
 
   buildInputs = with qt5; [
@@ -27,10 +36,11 @@ stdenv.mkDerivation (FinalAttrs: {
     qtmultimedia
     qtsvg
     qtwayland
+    ffmpeg_6
   ];
 
   meta = {
-    description = "An easy, intuitive tool to make 2D hand-drawn animations";
+    description = "Easy, intuitive tool to make 2D hand-drawn animations";
     homepage = "https://www.pencil2d.org/";
     downloadPage = "https://github.com/pencil2d/pencil";
     license = lib.licenses.gpl2;
